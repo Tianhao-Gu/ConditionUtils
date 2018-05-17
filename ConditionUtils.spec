@@ -55,7 +55,7 @@ module ConditionUtils {
     } GetConditionOutput;
 
     funcdef get_conditions(GetConditionParams params)
-        returns (GetConditionOutput output) authentication required;
+        returns (GetConditionOutput result) authentication required;
 
     /*
         input_shock_id and input_file_path - alternative input params,
@@ -72,21 +72,19 @@ module ConditionUtils {
     } FileToConditionSetOutput;
 
     funcdef file_to_condition_set(FileToConditionSetParams params)
-        returns (FileToConditionSetOutput) authentication required;
+        returns (FileToConditionSetOutput result) authentication required;
 
     typedef structure {
         ws_condition_set_id input_ref;
-        bool to_shock;
-        string file_path;
+        string destination_dir;
     } ConditionSetToTsvFileParams;
 
     typedef structure {
         string file_path;
-        string shock_id;
     } ConditionSetToTsvFileOutput;
 
     funcdef condition_set_to_tsv_file(ConditionSetToTsvFileParams params)
-        returns (ConditionSetToTsvFileOutput) authentication required;
+        returns (ConditionSetToTsvFileOutput result) authentication required;
 
     typedef structure {
         ws_condition_set_id input_ref;
@@ -97,9 +95,9 @@ module ConditionUtils {
     } ExportConditionSetOutput;
 
     funcdef export_condition_set_tsv(ExportConditionSetParams params)
-        returns (ExportConditionSetOutput) authentication required;
+        returns (ExportConditionSetOutput result) authentication required;
 
     funcdef export_condition_set_excel(ExportConditionSetParams params)
-        returns (ExportConditionSetOutput) authentication required;
+        returns (ExportConditionSetOutput result) authentication required;
 
 };

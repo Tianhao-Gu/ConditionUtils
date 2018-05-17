@@ -167,7 +167,7 @@ public class ConditionUtilsClient {
      * <pre>
      * </pre>
      * @param   params   instance of type {@link us.kbase.conditionutils.GetConditionParams GetConditionParams}
-     * @return   parameter "output" of type {@link us.kbase.conditionutils.GetConditionOutput GetConditionOutput}
+     * @return   parameter "result" of type {@link us.kbase.conditionutils.GetConditionOutput GetConditionOutput}
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
@@ -184,7 +184,7 @@ public class ConditionUtilsClient {
      * <pre>
      * </pre>
      * @param   params   instance of type {@link us.kbase.conditionutils.FileToConditionSetParams FileToConditionSetParams}
-     * @return   instance of type {@link us.kbase.conditionutils.FileToConditionSetOutput FileToConditionSetOutput}
+     * @return   parameter "result" of type {@link us.kbase.conditionutils.FileToConditionSetOutput FileToConditionSetOutput}
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
@@ -201,7 +201,7 @@ public class ConditionUtilsClient {
      * <pre>
      * </pre>
      * @param   params   instance of type {@link us.kbase.conditionutils.ConditionSetToTsvFileParams ConditionSetToTsvFileParams}
-     * @return   instance of type {@link us.kbase.conditionutils.ConditionSetToTsvFileOutput ConditionSetToTsvFileOutput}
+     * @return   parameter "result" of type {@link us.kbase.conditionutils.ConditionSetToTsvFileOutput ConditionSetToTsvFileOutput}
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
@@ -218,7 +218,7 @@ public class ConditionUtilsClient {
      * <pre>
      * </pre>
      * @param   params   instance of type {@link us.kbase.conditionutils.ExportConditionSetParams ExportConditionSetParams}
-     * @return   instance of type {@link us.kbase.conditionutils.ExportConditionSetOutput ExportConditionSetOutput}
+     * @return   parameter "result" of type {@link us.kbase.conditionutils.ExportConditionSetOutput ExportConditionSetOutput}
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
@@ -235,7 +235,7 @@ public class ConditionUtilsClient {
      * <pre>
      * </pre>
      * @param   params   instance of type {@link us.kbase.conditionutils.ExportConditionSetParams ExportConditionSetParams}
-     * @return   instance of type {@link us.kbase.conditionutils.ExportConditionSetOutput ExportConditionSetOutput}
+     * @return   parameter "result" of type {@link us.kbase.conditionutils.ExportConditionSetOutput ExportConditionSetOutput}
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 #BEGIN_HEADER
+from .core.Utils import Utils
 #END_HEADER
 
 
@@ -19,8 +20,8 @@ class ConditionUtils:
     # the latter method is running.
     ######################################### noqa
     VERSION = "0.0.1"
-    GIT_URL = ""
-    GIT_COMMIT_HASH = ""
+    GIT_URL = "https://github.com/JamesJeffryes/ConditionUtils.git"
+    GIT_COMMIT_HASH = "0e79a1fab918983b78a651451fc18673c43d3d0d"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -29,6 +30,8 @@ class ConditionUtils:
     # be found
     def __init__(self, config):
         #BEGIN_CONSTRUCTOR
+        self.utils = Utils(config)
+        self.scratch = config['scratch']
         #END_CONSTRUCTOR
         pass
 
@@ -54,16 +57,18 @@ class ConditionUtils:
            parameter "unit_ont_id" of String, parameter "value" of String
         """
         # ctx is the context object
-        # return variables are: output
+        # return variables are: result
         #BEGIN get_conditions
+        self.utils.validate_params(params, ("output_ws_name", "output_obj_name"))
+        result = self.utils.get_conditions(params)
         #END get_conditions
 
         # At some point might do deeper type checking...
-        if not isinstance(output, dict):
+        if not isinstance(result, dict):
             raise ValueError('Method get_conditions return value ' +
-                             'output is not type dict as required.')
+                             'result is not type dict as required.')
         # return the results
-        return [output]
+        return [result]
 
     def file_to_condition_set(self, ctx, params):
         """
@@ -77,38 +82,42 @@ class ConditionUtils:
            (@id ws ConditionSet)
         """
         # ctx is the context object
-        # return variables are: returnVal
+        # return variables are: result
         #BEGIN file_to_condition_set
+        self.utils.validate_params(params, ("output_ws_name", "output_obj_name"))
+        if 'input_shock_id' not in params and 'input_file_path' not in params:
+            raise ValueError("Must supply either a input_shock_id or input_file_path")
+        result = self.utils.file_to_condition_set(params)
         #END file_to_condition_set
 
         # At some point might do deeper type checking...
-        if not isinstance(returnVal, dict):
+        if not isinstance(result, dict):
             raise ValueError('Method file_to_condition_set return value ' +
-                             'returnVal is not type dict as required.')
+                             'result is not type dict as required.')
         # return the results
-        return [returnVal]
+        return [result]
 
     def condition_set_to_tsv_file(self, ctx, params):
         """
         :param params: instance of type "ConditionSetToTsvFileParams" ->
            structure: parameter "input_ref" of type "ws_condition_set_id"
-           (@id ws ConditionSet), parameter "to_shock" of type "bool",
-           parameter "file_path" of String
+           (@id ws ConditionSet), parameter "destination_dir" of String
         :returns: instance of type "ConditionSetToTsvFileOutput" ->
-           structure: parameter "file_path" of String, parameter "shock_id"
-           of String
+           structure: parameter "file_path" of String
         """
         # ctx is the context object
-        # return variables are: returnVal
+        # return variables are: result
         #BEGIN condition_set_to_tsv_file
+        self.utils.validate_params(params, ("destination_dir", "input_ref"))
+        cs_id, result = self.utils.to_tsv(params)
         #END condition_set_to_tsv_file
 
         # At some point might do deeper type checking...
-        if not isinstance(returnVal, dict):
+        if not isinstance(result, dict):
             raise ValueError('Method condition_set_to_tsv_file return value ' +
-                             'returnVal is not type dict as required.')
+                             'result is not type dict as required.')
         # return the results
-        return [returnVal]
+        return [result]
 
     def export_condition_set_tsv(self, ctx, params):
         """
@@ -119,16 +128,20 @@ class ConditionUtils:
            parameter "shock_id" of String
         """
         # ctx is the context object
-        # return variables are: returnVal
+        # return variables are: result
         #BEGIN export_condition_set_tsv
+        self.utils.validate_params(params, ("input_ref",))
+        params['destination_dir'] = self.scratch
+        cs_id, files = self.utils.to_tsv(params)
+        result = self.utils.export(files['file_path'], cs_id, params['input_ref'])
         #END export_condition_set_tsv
 
         # At some point might do deeper type checking...
-        if not isinstance(returnVal, dict):
+        if not isinstance(result, dict):
             raise ValueError('Method export_condition_set_tsv return value ' +
-                             'returnVal is not type dict as required.')
+                             'result is not type dict as required.')
         # return the results
-        return [returnVal]
+        return [result]
 
     def export_condition_set_excel(self, ctx, params):
         """
@@ -139,16 +152,20 @@ class ConditionUtils:
            parameter "shock_id" of String
         """
         # ctx is the context object
-        # return variables are: returnVal
+        # return variables are: result
         #BEGIN export_condition_set_excel
+        self.utils.validate_params(params, ("input_ref",))
+        params['destination_dir'] = self.scratch
+        cs_id, files = self.utils.to_excel(params)
+        result = self.utils.export(files['file_path'], cs_id, params['input_ref'])
         #END export_condition_set_excel
 
         # At some point might do deeper type checking...
-        if not isinstance(returnVal, dict):
+        if not isinstance(result, dict):
             raise ValueError('Method export_condition_set_excel return value ' +
-                             'returnVal is not type dict as required.')
+                             'result is not type dict as required.')
         # return the results
-        return [returnVal]
+        return [result]
     def status(self, ctx):
         #BEGIN_STATUS
         returnVal = {'state': "OK",

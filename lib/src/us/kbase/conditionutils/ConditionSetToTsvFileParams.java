@@ -20,17 +20,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
     "input_ref",
-    "to_shock",
-    "file_path"
+    "destination_dir"
 })
 public class ConditionSetToTsvFileParams {
 
     @JsonProperty("input_ref")
     private String inputRef;
-    @JsonProperty("to_shock")
-    private Long toShock;
-    @JsonProperty("file_path")
-    private String filePath;
+    @JsonProperty("destination_dir")
+    private String destinationDir;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("input_ref")
@@ -48,33 +45,18 @@ public class ConditionSetToTsvFileParams {
         return this;
     }
 
-    @JsonProperty("to_shock")
-    public Long getToShock() {
-        return toShock;
+    @JsonProperty("destination_dir")
+    public String getDestinationDir() {
+        return destinationDir;
     }
 
-    @JsonProperty("to_shock")
-    public void setToShock(Long toShock) {
-        this.toShock = toShock;
+    @JsonProperty("destination_dir")
+    public void setDestinationDir(String destinationDir) {
+        this.destinationDir = destinationDir;
     }
 
-    public ConditionSetToTsvFileParams withToShock(Long toShock) {
-        this.toShock = toShock;
-        return this;
-    }
-
-    @JsonProperty("file_path")
-    public String getFilePath() {
-        return filePath;
-    }
-
-    @JsonProperty("file_path")
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    public ConditionSetToTsvFileParams withFilePath(String filePath) {
-        this.filePath = filePath;
+    public ConditionSetToTsvFileParams withDestinationDir(String destinationDir) {
+        this.destinationDir = destinationDir;
         return this;
     }
 
@@ -90,7 +72,7 @@ public class ConditionSetToTsvFileParams {
 
     @Override
     public String toString() {
-        return ((((((((("ConditionSetToTsvFileParams"+" [inputRef=")+ inputRef)+", toShock=")+ toShock)+", filePath=")+ filePath)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((("ConditionSetToTsvFileParams"+" [inputRef=")+ inputRef)+", destinationDir=")+ destinationDir)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

@@ -76,11 +76,9 @@ class ConditionUtils(object):
         """
         :param params: instance of type "ConditionSetToTsvFileParams" ->
            structure: parameter "input_ref" of type "ws_condition_set_id"
-           (@id ws ConditionSet), parameter "to_shock" of type "bool",
-           parameter "file_path" of String
+           (@id ws ConditionSet), parameter "destination_dir" of String
         :returns: instance of type "ConditionSetToTsvFileOutput" ->
-           structure: parameter "file_path" of String, parameter "shock_id"
-           of String
+           structure: parameter "file_path" of String
         """
         return self._client.call_method(
             'ConditionUtils.condition_set_to_tsv_file',

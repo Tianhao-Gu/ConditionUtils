@@ -110,7 +110,7 @@ sub new
 
 =head2 get_conditions
 
-  $output = $obj->get_conditions($params)
+  $result = $obj->get_conditions($params)
 
 =over 4
 
@@ -120,7 +120,7 @@ sub new
 
 <pre>
 $params is a ConditionUtils.GetConditionParams
-$output is a ConditionUtils.GetConditionOutput
+$result is a ConditionUtils.GetConditionOutput
 GetConditionParams is a reference to a hash where the following keys are defined:
 	condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
 	conditions has a value which is a reference to a list where each element is a string
@@ -142,7 +142,7 @@ Factor is a reference to a hash where the following keys are defined:
 =begin text
 
 $params is a ConditionUtils.GetConditionParams
-$output is a ConditionUtils.GetConditionOutput
+$result is a ConditionUtils.GetConditionOutput
 GetConditionParams is a reference to a hash where the following keys are defined:
 	condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
 	conditions has a value which is a reference to a list where each element is a string
@@ -218,7 +218,7 @@ Factor is a reference to a hash where the following keys are defined:
 
 =head2 file_to_condition_set
 
-  $return = $obj->file_to_condition_set($params)
+  $result = $obj->file_to_condition_set($params)
 
 =over 4
 
@@ -228,7 +228,7 @@ Factor is a reference to a hash where the following keys are defined:
 
 <pre>
 $params is a ConditionUtils.FileToConditionSetParams
-$return is a ConditionUtils.FileToConditionSetOutput
+$result is a ConditionUtils.FileToConditionSetOutput
 FileToConditionSetParams is a reference to a hash where the following keys are defined:
 	input_shock_id has a value which is a string
 	input_file_path has a value which is a string
@@ -245,7 +245,7 @@ ws_condition_set_id is a string
 =begin text
 
 $params is a ConditionUtils.FileToConditionSetParams
-$return is a ConditionUtils.FileToConditionSetOutput
+$result is a ConditionUtils.FileToConditionSetOutput
 FileToConditionSetParams is a reference to a hash where the following keys are defined:
 	input_shock_id has a value which is a string
 	input_file_path has a value which is a string
@@ -316,7 +316,7 @@ ws_condition_set_id is a string
 
 =head2 condition_set_to_tsv_file
 
-  $return = $obj->condition_set_to_tsv_file($params)
+  $result = $obj->condition_set_to_tsv_file($params)
 
 =over 4
 
@@ -326,16 +326,13 @@ ws_condition_set_id is a string
 
 <pre>
 $params is a ConditionUtils.ConditionSetToTsvFileParams
-$return is a ConditionUtils.ConditionSetToTsvFileOutput
+$result is a ConditionUtils.ConditionSetToTsvFileOutput
 ConditionSetToTsvFileParams is a reference to a hash where the following keys are defined:
 	input_ref has a value which is a ConditionUtils.ws_condition_set_id
-	to_shock has a value which is a ConditionUtils.bool
-	file_path has a value which is a string
+	destination_dir has a value which is a string
 ws_condition_set_id is a string
-bool is an int
 ConditionSetToTsvFileOutput is a reference to a hash where the following keys are defined:
 	file_path has a value which is a string
-	shock_id has a value which is a string
 
 </pre>
 
@@ -344,16 +341,13 @@ ConditionSetToTsvFileOutput is a reference to a hash where the following keys ar
 =begin text
 
 $params is a ConditionUtils.ConditionSetToTsvFileParams
-$return is a ConditionUtils.ConditionSetToTsvFileOutput
+$result is a ConditionUtils.ConditionSetToTsvFileOutput
 ConditionSetToTsvFileParams is a reference to a hash where the following keys are defined:
 	input_ref has a value which is a ConditionUtils.ws_condition_set_id
-	to_shock has a value which is a ConditionUtils.bool
-	file_path has a value which is a string
+	destination_dir has a value which is a string
 ws_condition_set_id is a string
-bool is an int
 ConditionSetToTsvFileOutput is a reference to a hash where the following keys are defined:
 	file_path has a value which is a string
-	shock_id has a value which is a string
 
 
 =end text
@@ -416,7 +410,7 @@ ConditionSetToTsvFileOutput is a reference to a hash where the following keys ar
 
 =head2 export_condition_set_tsv
 
-  $return = $obj->export_condition_set_tsv($params)
+  $result = $obj->export_condition_set_tsv($params)
 
 =over 4
 
@@ -426,7 +420,7 @@ ConditionSetToTsvFileOutput is a reference to a hash where the following keys ar
 
 <pre>
 $params is a ConditionUtils.ExportConditionSetParams
-$return is a ConditionUtils.ExportConditionSetOutput
+$result is a ConditionUtils.ExportConditionSetOutput
 ExportConditionSetParams is a reference to a hash where the following keys are defined:
 	input_ref has a value which is a ConditionUtils.ws_condition_set_id
 ws_condition_set_id is a string
@@ -440,7 +434,7 @@ ExportConditionSetOutput is a reference to a hash where the following keys are d
 =begin text
 
 $params is a ConditionUtils.ExportConditionSetParams
-$return is a ConditionUtils.ExportConditionSetOutput
+$result is a ConditionUtils.ExportConditionSetOutput
 ExportConditionSetParams is a reference to a hash where the following keys are defined:
 	input_ref has a value which is a ConditionUtils.ws_condition_set_id
 ws_condition_set_id is a string
@@ -508,7 +502,7 @@ ExportConditionSetOutput is a reference to a hash where the following keys are d
 
 =head2 export_condition_set_excel
 
-  $return = $obj->export_condition_set_excel($params)
+  $result = $obj->export_condition_set_excel($params)
 
 =over 4
 
@@ -518,7 +512,7 @@ ExportConditionSetOutput is a reference to a hash where the following keys are d
 
 <pre>
 $params is a ConditionUtils.ExportConditionSetParams
-$return is a ConditionUtils.ExportConditionSetOutput
+$result is a ConditionUtils.ExportConditionSetOutput
 ExportConditionSetParams is a reference to a hash where the following keys are defined:
 	input_ref has a value which is a ConditionUtils.ws_condition_set_id
 ws_condition_set_id is a string
@@ -532,7 +526,7 @@ ExportConditionSetOutput is a reference to a hash where the following keys are d
 =begin text
 
 $params is a ConditionUtils.ExportConditionSetParams
-$return is a ConditionUtils.ExportConditionSetOutput
+$result is a ConditionUtils.ExportConditionSetOutput
 ExportConditionSetParams is a reference to a hash where the following keys are defined:
 	input_ref has a value which is a ConditionUtils.ws_condition_set_id
 ws_condition_set_id is a string
@@ -986,8 +980,7 @@ output_condition_set_ref has a value which is a ConditionUtils.ws_condition_set_
 <pre>
 a reference to a hash where the following keys are defined:
 input_ref has a value which is a ConditionUtils.ws_condition_set_id
-to_shock has a value which is a ConditionUtils.bool
-file_path has a value which is a string
+destination_dir has a value which is a string
 
 </pre>
 
@@ -997,8 +990,7 @@ file_path has a value which is a string
 
 a reference to a hash where the following keys are defined:
 input_ref has a value which is a ConditionUtils.ws_condition_set_id
-to_shock has a value which is a ConditionUtils.bool
-file_path has a value which is a string
+destination_dir has a value which is a string
 
 
 =end text
@@ -1020,7 +1012,6 @@ file_path has a value which is a string
 <pre>
 a reference to a hash where the following keys are defined:
 file_path has a value which is a string
-shock_id has a value which is a string
 
 </pre>
 
@@ -1030,7 +1021,6 @@ shock_id has a value which is a string
 
 a reference to a hash where the following keys are defined:
 file_path has a value which is a string
-shock_id has a value which is a string
 
 
 =end text
