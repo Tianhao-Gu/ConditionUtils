@@ -10,7 +10,7 @@ class ConditionUtils:
     ConditionUtils
 
     Module Description:
-    A KBase module: ConditionUtils
+    
     '''
 
     ######## WARNING FOR GEVENT USERS ####### noqa
@@ -21,7 +21,7 @@ class ConditionUtils:
     ######################################### noqa
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/JamesJeffryes/ConditionUtils.git"
-    GIT_COMMIT_HASH = "0e79a1fab918983b78a651451fc18673c43d3d0d"
+    GIT_COMMIT_HASH = "a41a4598175c5600ac8baaff979453964fc68d2b"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -44,8 +44,8 @@ class ConditionUtils:
            conditions should be returned. defaults to all conditions in the
            set Returns {condition_label: {ontology_type(e.g. GO):
            [Factors]}}) -> structure: parameter "condition_set_ref" of type
-           "ws_condition_set_id" (@id ws ConditionSet), parameter
-           "conditions" of list of String
+           "ws_condition_set_id" (@id ws KBaseExperiments.ConditionSet),
+           parameter "conditions" of list of String
         :returns: instance of type "GetConditionOutput" -> structure:
            parameter "conditions" of mapping from String to mapping from
            String to list of type "Factor" (Internally this is used to store
@@ -59,7 +59,7 @@ class ConditionUtils:
         # ctx is the context object
         # return variables are: result
         #BEGIN get_conditions
-        self.utils.validate_params(params, ("output_ws_name", "output_obj_name"))
+        self.utils.validate_params(params, ("output_ws_id", "output_obj_name"))
         result = self.utils.get_conditions(params)
         #END get_conditions
 
@@ -75,11 +75,11 @@ class ConditionUtils:
         :param params: instance of type "FileToConditionSetParams"
            (input_shock_id and input_file_path - alternative input params,)
            -> structure: parameter "input_shock_id" of String, parameter
-           "input_file_path" of String, parameter "output_ws_name" of String,
+           "input_file_path" of String, parameter "output_ws_id" of String,
            parameter "output_obj_name" of String
         :returns: instance of type "FileToConditionSetOutput" -> structure:
            parameter "output_condition_set_ref" of type "ws_condition_set_id"
-           (@id ws ConditionSet)
+           (@id ws KBaseExperiments.ConditionSet)
         """
         # ctx is the context object
         # return variables are: result
@@ -101,7 +101,8 @@ class ConditionUtils:
         """
         :param params: instance of type "ConditionSetToTsvFileParams" ->
            structure: parameter "input_ref" of type "ws_condition_set_id"
-           (@id ws ConditionSet), parameter "destination_dir" of String
+           (@id ws KBaseExperiments.ConditionSet), parameter
+           "destination_dir" of String
         :returns: instance of type "ConditionSetToTsvFileOutput" ->
            structure: parameter "file_path" of String
         """
@@ -123,7 +124,7 @@ class ConditionUtils:
         """
         :param params: instance of type "ExportConditionSetParams" ->
            structure: parameter "input_ref" of type "ws_condition_set_id"
-           (@id ws ConditionSet)
+           (@id ws KBaseExperiments.ConditionSet)
         :returns: instance of type "ExportConditionSetOutput" -> structure:
            parameter "shock_id" of String
         """
@@ -147,7 +148,7 @@ class ConditionUtils:
         """
         :param params: instance of type "ExportConditionSetParams" ->
            structure: parameter "input_ref" of type "ws_condition_set_id"
-           (@id ws ConditionSet)
+           (@id ws KBaseExperiments.ConditionSet)
         :returns: instance of type "ExportConditionSetOutput" -> structure:
            parameter "shock_id" of String
         """

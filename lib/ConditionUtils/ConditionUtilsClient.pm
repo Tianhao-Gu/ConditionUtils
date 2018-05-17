@@ -26,7 +26,7 @@ ConditionUtils::ConditionUtilsClient
 =head1 DESCRIPTION
 
 
-A KBase module: ConditionUtils
+
 
 
 =cut
@@ -126,7 +126,7 @@ GetConditionParams is a reference to a hash where the following keys are defined
 	conditions has a value which is a reference to a list where each element is a string
 ws_condition_set_id is a string
 GetConditionOutput is a reference to a hash where the following keys are defined:
-	conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a hash where the key is a string and the value is a reference to a list where each element is a ConditionUtils.Factor
+	conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a hash where the key is a string and the value is a reference to a list where each element is a KBaseExperiments.Factor
 Factor is a reference to a hash where the following keys are defined:
 	factor_label has a value which is a string
 	factor_ont_ref has a value which is a string
@@ -148,7 +148,7 @@ GetConditionParams is a reference to a hash where the following keys are defined
 	conditions has a value which is a reference to a list where each element is a string
 ws_condition_set_id is a string
 GetConditionOutput is a reference to a hash where the following keys are defined:
-	conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a hash where the key is a string and the value is a reference to a list where each element is a ConditionUtils.Factor
+	conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a hash where the key is a string and the value is a reference to a list where each element is a KBaseExperiments.Factor
 Factor is a reference to a hash where the following keys are defined:
 	factor_label has a value which is a string
 	factor_ont_ref has a value which is a string
@@ -232,7 +232,7 @@ $result is a ConditionUtils.FileToConditionSetOutput
 FileToConditionSetParams is a reference to a hash where the following keys are defined:
 	input_shock_id has a value which is a string
 	input_file_path has a value which is a string
-	output_ws_name has a value which is a string
+	output_ws_id has a value which is a string
 	output_obj_name has a value which is a string
 FileToConditionSetOutput is a reference to a hash where the following keys are defined:
 	output_condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
@@ -249,7 +249,7 @@ $result is a ConditionUtils.FileToConditionSetOutput
 FileToConditionSetParams is a reference to a hash where the following keys are defined:
 	input_shock_id has a value which is a string
 	input_file_path has a value which is a string
-	output_ws_name has a value which is a string
+	output_ws_id has a value which is a string
 	output_obj_name has a value which is a string
 FileToConditionSetOutput is a reference to a hash where the following keys are defined:
 	output_condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
@@ -705,94 +705,6 @@ an int
 
 
 
-=head2 Factor
-
-=over 4
-
-
-
-=item Description
-
-Internally this is used to store factor information (without the value term) and also a
-format for returning data in a useful form from get_conditions
-@optional unit_id unit_ont_id value
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-factor_label has a value which is a string
-factor_ont_ref has a value which is a string
-factor_ont_id has a value which is a string
-unit_id has a value which is a string
-unit_ont_id has a value which is a string
-value has a value which is a string
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-factor_label has a value which is a string
-factor_ont_ref has a value which is a string
-factor_ont_id has a value which is a string
-unit_id has a value which is a string
-unit_ont_id has a value which is a string
-value has a value which is a string
-
-
-=end text
-
-=back
-
-
-
-=head2 ConditionSet
-
-=over 4
-
-
-
-=item Description
-
-factors - list of supplied factors
-conditions - mapping of condition_labels to a list of factor values in the same order as the factors array
-Ontology_mapping_method - One of ???User curation???, ???Closest matching string???
-
-
-=item Definition
-
-=begin html
-
-<pre>
-a reference to a hash where the following keys are defined:
-conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a list where each element is a string
-factors has a value which is a reference to a list where each element is a ConditionUtils.Factor
-ontology_mapping_method has a value which is a string
-
-</pre>
-
-=end html
-
-=begin text
-
-a reference to a hash where the following keys are defined:
-conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a list where each element is a string
-factors has a value which is a reference to a list where each element is a ConditionUtils.Factor
-ontology_mapping_method has a value which is a string
-
-
-=end text
-
-=back
-
-
-
 =head2 ws_condition_set_id
 
 =over 4
@@ -801,7 +713,7 @@ ontology_mapping_method has a value which is a string
 
 =item Description
 
-@id ws ConditionSet
+@id ws KBaseExperiments.ConditionSet
 
 
 =item Definition
@@ -878,7 +790,7 @@ conditions has a value which is a reference to a list where each element is a st
 
 <pre>
 a reference to a hash where the following keys are defined:
-conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a hash where the key is a string and the value is a reference to a list where each element is a ConditionUtils.Factor
+conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a hash where the key is a string and the value is a reference to a list where each element is a KBaseExperiments.Factor
 
 </pre>
 
@@ -887,7 +799,7 @@ conditions has a value which is a reference to a hash where the key is a string 
 =begin text
 
 a reference to a hash where the following keys are defined:
-conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a hash where the key is a string and the value is a reference to a list where each element is a ConditionUtils.Factor
+conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a hash where the key is a string and the value is a reference to a list where each element is a KBaseExperiments.Factor
 
 
 =end text
@@ -915,7 +827,7 @@ input_shock_id and input_file_path - alternative input params,
 a reference to a hash where the following keys are defined:
 input_shock_id has a value which is a string
 input_file_path has a value which is a string
-output_ws_name has a value which is a string
+output_ws_id has a value which is a string
 output_obj_name has a value which is a string
 
 </pre>
@@ -927,7 +839,7 @@ output_obj_name has a value which is a string
 a reference to a hash where the following keys are defined:
 input_shock_id has a value which is a string
 input_file_path has a value which is a string
-output_ws_name has a value which is a string
+output_ws_id has a value which is a string
 output_obj_name has a value which is a string
 
 

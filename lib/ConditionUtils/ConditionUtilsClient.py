@@ -41,8 +41,8 @@ class ConditionUtils(object):
            conditions should be returned. defaults to all conditions in the
            set Returns {condition_label: {ontology_type(e.g. GO):
            [Factors]}}) -> structure: parameter "condition_set_ref" of type
-           "ws_condition_set_id" (@id ws ConditionSet), parameter
-           "conditions" of list of String
+           "ws_condition_set_id" (@id ws KBaseExperiments.ConditionSet),
+           parameter "conditions" of list of String
         :returns: instance of type "GetConditionOutput" -> structure:
            parameter "conditions" of mapping from String to mapping from
            String to list of type "Factor" (Internally this is used to store
@@ -62,11 +62,11 @@ class ConditionUtils(object):
         :param params: instance of type "FileToConditionSetParams"
            (input_shock_id and input_file_path - alternative input params,)
            -> structure: parameter "input_shock_id" of String, parameter
-           "input_file_path" of String, parameter "output_ws_name" of String,
+           "input_file_path" of String, parameter "output_ws_id" of String,
            parameter "output_obj_name" of String
         :returns: instance of type "FileToConditionSetOutput" -> structure:
            parameter "output_condition_set_ref" of type "ws_condition_set_id"
-           (@id ws ConditionSet)
+           (@id ws KBaseExperiments.ConditionSet)
         """
         return self._client.call_method(
             'ConditionUtils.file_to_condition_set',
@@ -76,7 +76,8 @@ class ConditionUtils(object):
         """
         :param params: instance of type "ConditionSetToTsvFileParams" ->
            structure: parameter "input_ref" of type "ws_condition_set_id"
-           (@id ws ConditionSet), parameter "destination_dir" of String
+           (@id ws KBaseExperiments.ConditionSet), parameter
+           "destination_dir" of String
         :returns: instance of type "ConditionSetToTsvFileOutput" ->
            structure: parameter "file_path" of String
         """
@@ -88,7 +89,7 @@ class ConditionUtils(object):
         """
         :param params: instance of type "ExportConditionSetParams" ->
            structure: parameter "input_ref" of type "ws_condition_set_id"
-           (@id ws ConditionSet)
+           (@id ws KBaseExperiments.ConditionSet)
         :returns: instance of type "ExportConditionSetOutput" -> structure:
            parameter "shock_id" of String
         """
@@ -100,7 +101,7 @@ class ConditionUtils(object):
         """
         :param params: instance of type "ExportConditionSetParams" ->
            structure: parameter "input_ref" of type "ws_condition_set_id"
-           (@id ws ConditionSet)
+           (@id ws KBaseExperiments.ConditionSet)
         :returns: instance of type "ExportConditionSetOutput" -> structure:
            parameter "shock_id" of String
         """

@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
     "input_shock_id",
     "input_file_path",
-    "output_ws_name",
+    "output_ws_id",
     "output_obj_name"
 })
 public class FileToConditionSetParams {
@@ -32,8 +32,8 @@ public class FileToConditionSetParams {
     private String inputShockId;
     @JsonProperty("input_file_path")
     private String inputFilePath;
-    @JsonProperty("output_ws_name")
-    private String outputWsName;
+    @JsonProperty("output_ws_id")
+    private String outputWsId;
     @JsonProperty("output_obj_name")
     private String outputObjName;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -68,18 +68,18 @@ public class FileToConditionSetParams {
         return this;
     }
 
-    @JsonProperty("output_ws_name")
-    public String getOutputWsName() {
-        return outputWsName;
+    @JsonProperty("output_ws_id")
+    public String getOutputWsId() {
+        return outputWsId;
     }
 
-    @JsonProperty("output_ws_name")
-    public void setOutputWsName(String outputWsName) {
-        this.outputWsName = outputWsName;
+    @JsonProperty("output_ws_id")
+    public void setOutputWsId(String outputWsId) {
+        this.outputWsId = outputWsId;
     }
 
-    public FileToConditionSetParams withOutputWsName(String outputWsName) {
-        this.outputWsName = outputWsName;
+    public FileToConditionSetParams withOutputWsId(String outputWsId) {
+        this.outputWsId = outputWsId;
         return this;
     }
 
@@ -110,7 +110,7 @@ public class FileToConditionSetParams {
 
     @Override
     public String toString() {
-        return ((((((((((("FileToConditionSetParams"+" [inputShockId=")+ inputShockId)+", inputFilePath=")+ inputFilePath)+", outputWsName=")+ outputWsName)+", outputObjName=")+ outputObjName)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((("FileToConditionSetParams"+" [inputShockId=")+ inputShockId)+", inputFilePath=")+ inputFilePath)+", outputWsId=")+ outputWsId)+", outputObjName=")+ outputObjName)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

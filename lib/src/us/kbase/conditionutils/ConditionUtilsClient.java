@@ -16,7 +16,6 @@ import us.kbase.common.service.UnauthorizedException;
 /**
  * <p>Original spec-file module name: ConditionUtils</p>
  * <pre>
- * A KBase module: ConditionUtils
  * </pre>
  */
 public class ConditionUtilsClient {
