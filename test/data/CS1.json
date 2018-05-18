@@ -40,15 +40,15 @@
   },
   "factors": [
     {
-      "factor_ont_id": "CustomTerm",
-      "factor_unit_id": "CustomUnit",
+      "factor_ont_id": "Custom:Term",
+      "factor_unit_id": "Custom:Unit",
       "factor_ont_ref": "KbaseOntologies/Custom",
       "unit": "Hour",
       "factor": "Time series design"
     },
     {
-      "factor_ont_id": "CustomTerm",
-      "factor_unit_id": "CustomUnit",
+      "factor_ont_id": "Custom:Term",
+      "factor_unit_id": "Custom:Unit",
       "factor_ont_ref": "KbaseOntologies/Custom",
       "unit": "nanogram per milliliter",
       "factor": "Treatment with Sirolimus"

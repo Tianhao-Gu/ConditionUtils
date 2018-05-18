@@ -1,9 +1,12 @@
-import pandas as pd
+import copy
+import logging
 import os
 import shutil
 import uuid
+from collections import defaultdict
+
+import pandas as pd
 from xlrd.biffh import XLRDError
-import logging
 
 from DataFileUtil.DataFileUtilClient import DataFileUtil
 
@@ -14,8 +17,8 @@ class Utils:
         self.scratch = config['scratch']
         self.dfu = DataFileUtil(os.environ['SDK_CALLBACK_URL'])
         self.DEFAULT_ONTOLOGY_REF = "KbaseOntologies/Custom"
-        self.DEFAULT_ONTOLOGY_ID = "CustomTerm"
-        self.DEFAULT_UNIT_ID = "CustomUnit"
+        self.DEFAULT_ONTOLOGY_ID = "Custom:Term"
+        self.DEFAULT_UNIT_ID = "Custom:Unit"
 
     @staticmethod
     def validate_params(params, expected, opt_param=set()):
@@ -32,7 +35,18 @@ class Utils:
                 logging.warning("Unexpected parameter {} supplied".format(param))
 
     def get_conditions(self, params):
-        raise NotImplementedError
+        data = self.dfu.get_objects({
+            'object_refs': [params['condition_set_ref']]
+        })['data'][0]['data']
+        conditions = {}
+        keep_keys = params.get('conditions', data['conditions'].keys())
+        for key in keep_keys:
+            conditions[key] = defaultdict(list)
+            for factor, val in zip(data['factors'], data['conditions'][key]):
+                ont_abriv = factor['factor_ont_id'].split(":")[0]
+                factor['value'] = val
+                conditions[key][ont_abriv].append(copy.copy(factor))
+        return {"conditions": conditions}
 
     def file_to_condition_set(self, params):
         """Convert a user supplied file to a compound set"""

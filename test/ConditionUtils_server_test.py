@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-import unittest
-import os  # noqa: F401
-import time
-from mock import patch
-from os import environ
-import shutil
 import json
+import os
+import shutil
+import time
+import unittest
+
+from mock import patch
+
 try:
     from ConfigParser import ConfigParser  # py2
-except:
+except ImportError:
     from configparser import ConfigParser  # py3
 
 from biokbase.workspace.client import Workspace as workspaceService
@@ -22,8 +23,8 @@ class ConditionUtilsTest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        token = environ.get('KB_AUTH_TOKEN', None)
-        config_file = environ.get('KB_DEPLOYMENT_CONFIG', None)
+        token = os.environ.get('KB_AUTH_TOKEN', None)
+        config_file = os.environ.get('KB_DEPLOYMENT_CONFIG', None)
         cls.cfg = {}
         config = ConfigParser()
         config.read(config_file)
@@ -54,12 +55,12 @@ class ConditionUtilsTest(unittest.TestCase):
         wsName = "test_CompoundSetUtils_" + str(suffix)
         ret = cls.wsClient.create_workspace({'workspace': wsName})
         cls.wsId = ret[0]
-        cond_set = json.load(open('data/CS1.json'))
+        cls.cond_set = json.load(open('data/CS1.json'))
         info = cls.dfu.save_objects({
             "id": cls.wsId,
             "objects": [{
                 "type": "KBaseExperiments.ConditionSet",
-                "data": cond_set,
+                "data": cls.cond_set,
                 "name": "test_cond_set"
             }]
         })[0]
@@ -102,6 +103,18 @@ class ConditionUtilsTest(unittest.TestCase):
         with self.assertRaisesRegexp(ValueError, "Required keys"):
             self.getImpl().export_condition_set_excel(self.getContext(), {})
 
+    def test_get_conditions(self):
+        params = {'condition_set_ref': self.condition_set_ref, 'conditions': ['S1', 'S4']}
+        ret = self.getImpl().get_conditions(self.getContext(), params)[0]
+        print(ret)
+        self.assertEqual(set(ret['conditions'].keys()), {"S1", "S4"})
+        s1 = ret['conditions']['S1']
+        self.assertIn("Custom", s1)
+        self.assertEqual(len(s1['Custom']), 2)
+        self.assertEqual(set(s1['Custom'][0]), {'factor_ont_id', 'factor_unit_id',
+                                                'factor_ont_ref', 'unit', 'factor', 'value'})
+        self.assertEqual(s1['Custom'][0]['value'], "0")
+
     @patch.object(DataFileUtil, "download_staging_file", new=fake_staging_download)
     def test_tsv_import(self):
         params = {'output_ws_id': self.getWsId(),
@@ -109,6 +122,10 @@ class ConditionUtilsTest(unittest.TestCase):
                   'output_obj_name': 'CS1'}
         ret = self.getImpl().file_to_condition_set(self.getContext(), params)[0]
         assert ret and ('condition_set_ref' in ret)
+        data = self.dfu.get_objects({
+            'object_refs': [ret['condition_set_ref']]
+        })['data'][0]['data']
+        self.assertEqual(data, self.cond_set)
 
     def test_excel_import(self):
         shock_file = '/CS1.xlsx'
@@ -119,11 +136,14 @@ class ConditionUtilsTest(unittest.TestCase):
                   'output_obj_name': 'CS2'}
         ret = self.getImpl().file_to_condition_set(self.getContext(), params)[0]
         assert ret and ('condition_set_ref' in ret)
+        data = self.dfu.get_objects({
+            'object_refs': [ret['condition_set_ref']]
+        })['data'][0]['data']
+        self.assertEqual(data, self.cond_set)
 
     def test_make_tsv(self):
         params = {'input_ref': self.condition_set_ref, 'destination_dir': self.scratch}
         ret = self.getImpl().condition_set_to_tsv_file(self.getContext(), params)[0]
-        print(ret)
         assert ret and ('file_path' in ret)
 
     def test_export_tsv(self):
