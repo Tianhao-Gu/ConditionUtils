@@ -128,10 +128,10 @@ ws_condition_set_id is a string
 GetConditionOutput is a reference to a hash where the following keys are defined:
 	conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a hash where the key is a string and the value is a reference to a list where each element is a KBaseExperiments.Factor
 Factor is a reference to a hash where the following keys are defined:
-	factor_label has a value which is a string
+	factor has a value which is a string
 	factor_ont_ref has a value which is a string
 	factor_ont_id has a value which is a string
-	unit_id has a value which is a string
+	unit has a value which is a string
 	unit_ont_id has a value which is a string
 	value has a value which is a string
 
@@ -150,10 +150,10 @@ ws_condition_set_id is a string
 GetConditionOutput is a reference to a hash where the following keys are defined:
 	conditions has a value which is a reference to a hash where the key is a string and the value is a reference to a hash where the key is a string and the value is a reference to a list where each element is a KBaseExperiments.Factor
 Factor is a reference to a hash where the following keys are defined:
-	factor_label has a value which is a string
+	factor has a value which is a string
 	factor_ont_ref has a value which is a string
 	factor_ont_id has a value which is a string
-	unit_id has a value which is a string
+	unit has a value which is a string
 	unit_ont_id has a value which is a string
 	value has a value which is a string
 
@@ -235,7 +235,7 @@ FileToConditionSetParams is a reference to a hash where the following keys are d
 	output_ws_id has a value which is a string
 	output_obj_name has a value which is a string
 FileToConditionSetOutput is a reference to a hash where the following keys are defined:
-	output_condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
+	condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
 ws_condition_set_id is a string
 
 </pre>
@@ -252,7 +252,7 @@ FileToConditionSetParams is a reference to a hash where the following keys are d
 	output_ws_id has a value which is a string
 	output_obj_name has a value which is a string
 FileToConditionSetOutput is a reference to a hash where the following keys are defined:
-	output_condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
+	condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
 ws_condition_set_id is a string
 
 
@@ -861,7 +861,7 @@ output_obj_name has a value which is a string
 
 <pre>
 a reference to a hash where the following keys are defined:
-output_condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
+condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
 
 </pre>
 
@@ -870,7 +870,7 @@ output_condition_set_ref has a value which is a ConditionUtils.ws_condition_set_
 =begin text
 
 a reference to a hash where the following keys are defined:
-output_condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
+condition_set_ref has a value which is a ConditionUtils.ws_condition_set_id
 
 
 =end text

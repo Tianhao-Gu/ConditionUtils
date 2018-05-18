@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 import unittest
 import os  # noqa: F401
-import json  # noqa: F401
 import time
-import requests
-
+from mock import patch
 from os import environ
+import shutil
+import json
 try:
     from ConfigParser import ConfigParser  # py2
 except:
     from configparser import ConfigParser  # py3
 
-from pprint import pprint  # noqa: F401
-
 from biokbase.workspace.client import Workspace as workspaceService
+from DataFileUtil.DataFileUtilClient import DataFileUtil
 from ConditionUtils.ConditionUtilsImpl import ConditionUtils
 from ConditionUtils.ConditionUtilsServer import MethodContext
 from ConditionUtils.authclient import KBaseAuth as _KBaseAuth
@@ -50,6 +49,21 @@ class ConditionUtilsTest(unittest.TestCase):
         cls.serviceImpl = ConditionUtils(cls.cfg)
         cls.scratch = cls.cfg['scratch']
         cls.callback_url = os.environ['SDK_CALLBACK_URL']
+        cls.dfu = DataFileUtil(cls.callback_url)
+        suffix = int(time.time() * 1000)
+        wsName = "test_CompoundSetUtils_" + str(suffix)
+        ret = cls.wsClient.create_workspace({'workspace': wsName})
+        cls.wsId = ret[0]
+        cond_set = json.load(open('data/CS1.json'))
+        info = cls.dfu.save_objects({
+            "id": cls.wsId,
+            "objects": [{
+                "type": "KBaseExperiments.ConditionSet",
+                "data": cond_set,
+                "name": "test_cond_set"
+            }]
+        })[0]
+        cls.condition_set_ref = "%s/%s/%s" % (info[6], info[0], info[4])
 
     @classmethod
     def tearDownClass(cls):
@@ -60,14 +74,8 @@ class ConditionUtilsTest(unittest.TestCase):
     def getWsClient(self):
         return self.__class__.wsClient
 
-    def getWsName(self):
-        if hasattr(self.__class__, 'wsName'):
-            return self.__class__.wsName
-        suffix = int(time.time() * 1000)
-        wsName = "test_ConditionUtils_" + str(suffix)
-        ret = self.getWsClient().create_workspace({'workspace': wsName})  # noqa
-        self.__class__.wsName = wsName
-        return wsName
+    def getWsId(self):
+        return self.__class__.wsId
 
     def getImpl(self):
         return self.__class__.serviceImpl
@@ -75,15 +83,55 @@ class ConditionUtilsTest(unittest.TestCase):
     def getContext(self):
         return self.__class__.ctx
 
-    # NOTE: According to Python unittest naming rules test method names should start from 'test'. # noqa
-    def test_your_method(self):
-        # Prepare test objects in workspace if needed using
-        # self.getWsClient().save_objects({'workspace': self.getWsName(),
-        #                                  'objects': []})
-        #
-        # Run your method by
-        # ret = self.getImpl().your_method(self.getContext(), parameters...)
-        #
-        # Check returned data with
-        # self.assertEqual(ret[...], ...) or other unittest methods
-        pass
+    @staticmethod
+    def fake_staging_download(params):
+        scratch = '/kb/module/work/tmp/'
+        inpath = params['staging_file_subdir_path']
+        shutil.copy('/kb/module/test/data/' + inpath, scratch + inpath)
+        return {'copy_file_path': scratch + inpath}
+
+    def test_missing_params(self):
+        with self.assertRaisesRegexp(ValueError, "Required keys"):
+            self.getImpl().get_conditions(self.getContext(), {})
+        with self.assertRaisesRegexp(ValueError, "Required keys"):
+            self.getImpl().file_to_condition_set(self.getContext(), {})
+        with self.assertRaisesRegexp(ValueError, "Required keys"):
+            self.getImpl().condition_set_to_tsv_file(self.getContext(), {})
+        with self.assertRaisesRegexp(ValueError, "Required keys"):
+            self.getImpl().export_condition_set_tsv(self.getContext(), {})
+        with self.assertRaisesRegexp(ValueError, "Required keys"):
+            self.getImpl().export_condition_set_excel(self.getContext(), {})
+
+    @patch.object(DataFileUtil, "download_staging_file", new=fake_staging_download)
+    def test_tsv_import(self):
+        params = {'output_ws_id': self.getWsId(),
+                  'input_file_path': 'CS1.tsv',
+                  'output_obj_name': 'CS1'}
+        ret = self.getImpl().file_to_condition_set(self.getContext(), params)[0]
+        assert ret and ('condition_set_ref' in ret)
+
+    def test_excel_import(self):
+        shock_file = '/CS1.xlsx'
+        shutil.copy('/kb/module/test/data/' + shock_file, self.scratch + shock_file)
+        shock_id = self.dfu.file_to_shock({'file_path': self.scratch + shock_file})['shock_id']
+        params = {'output_ws_id': self.getWsId(),
+                  'input_shock_id': shock_id,
+                  'output_obj_name': 'CS2'}
+        ret = self.getImpl().file_to_condition_set(self.getContext(), params)[0]
+        assert ret and ('condition_set_ref' in ret)
+
+    def test_make_tsv(self):
+        params = {'input_ref': self.condition_set_ref, 'destination_dir': self.scratch}
+        ret = self.getImpl().condition_set_to_tsv_file(self.getContext(), params)[0]
+        print(ret)
+        assert ret and ('file_path' in ret)
+
+    def test_export_tsv(self):
+        params = {'input_ref': self.condition_set_ref}
+        ret = self.getImpl().export_condition_set_tsv(self.getContext(), params)[0]
+        assert ret and ('shock_id' in ret)
+
+    def test_export_excel(self):
+        params = {'input_ref': self.condition_set_ref}
+        ret = self.getImpl().export_condition_set_excel(self.getContext(), params)[0]
+        assert ret and ('shock_id' in ret)

@@ -47,11 +47,11 @@ class ConditionUtils(object):
            parameter "conditions" of mapping from String to mapping from
            String to list of type "Factor" (Internally this is used to store
            factor information (without the value term) and also a format for
-           returning data in a useful form from get_conditions @optional
-           unit_id unit_ont_id value) -> structure: parameter "factor_label"
-           of String, parameter "factor_ont_ref" of String, parameter
-           "factor_ont_id" of String, parameter "unit_id" of String,
-           parameter "unit_ont_id" of String, parameter "value" of String
+           returning data in a useful form from get_conditions @optional unit
+           unit_ont_id value) -> structure: parameter "factor" of String,
+           parameter "factor_ont_ref" of String, parameter "factor_ont_id" of
+           String, parameter "unit" of String, parameter "unit_ont_id" of
+           String, parameter "value" of String
         """
         return self._client.call_method(
             'ConditionUtils.get_conditions',
@@ -65,8 +65,8 @@ class ConditionUtils(object):
            "input_file_path" of String, parameter "output_ws_id" of String,
            parameter "output_obj_name" of String
         :returns: instance of type "FileToConditionSetOutput" -> structure:
-           parameter "output_condition_set_ref" of type "ws_condition_set_id"
-           (@id ws KBaseExperiments.ConditionSet)
+           parameter "condition_set_ref" of type "ws_condition_set_id" (@id
+           ws KBaseExperiments.ConditionSet)
         """
         return self._client.call_method(
             'ConditionUtils.file_to_condition_set',

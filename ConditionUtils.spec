@@ -42,7 +42,7 @@ module ConditionUtils {
     } FileToConditionSetParams;
 
     typedef structure {
-        ws_condition_set_id output_condition_set_ref;
+        ws_condition_set_id condition_set_ref;
     } FileToConditionSetOutput;
 
     funcdef file_to_condition_set(FileToConditionSetParams params)

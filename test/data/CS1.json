@@ -1,0 +1,57 @@
+{
+  "ontology_mapping_method": "User Curation",
+  "conditions": {
+    "S9": [
+      "0",
+      "200"
+    ],
+    "S8": [
+      "0",
+      "200"
+    ],
+    "S3": [
+      "0",
+      "0"
+    ],
+    "S2": [
+      "0",
+      "0"
+    ],
+    "S1": [
+      "0",
+      "0"
+    ],
+    "S7": [
+      "0",
+      "200"
+    ],
+    "S6": [
+      "2",
+      "0"
+    ],
+    "S5": [
+      "2",
+      "0"
+    ],
+    "S4": [
+      "2",
+      "0"
+    ]
+  },
+  "factors": [
+    {
+      "factor_ont_id": "CustomTerm",
+      "factor_unit_id": "CustomUnit",
+      "factor_ont_ref": "KbaseOntologies/Custom",
+      "unit": "Hour",
+      "factor": "Time series design"
+    },
+    {
+      "factor_ont_id": "CustomTerm",
+      "factor_unit_id": "CustomUnit",
+      "factor_ont_ref": "KbaseOntologies/Custom",
+      "unit": "nanogram per milliliter",
+      "factor": "Treatment with Sirolimus"
+    }
+  ]
+}

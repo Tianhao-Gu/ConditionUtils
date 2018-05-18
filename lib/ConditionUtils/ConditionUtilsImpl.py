@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 #BEGIN_HEADER
+import logging
+
 from .core.Utils import Utils
 #END_HEADER
 
@@ -21,7 +23,7 @@ class ConditionUtils:
     ######################################### noqa
     VERSION = "0.0.1"
     GIT_URL = "https://github.com/JamesJeffryes/ConditionUtils.git"
-    GIT_COMMIT_HASH = "a41a4598175c5600ac8baaff979453964fc68d2b"
+    GIT_COMMIT_HASH = "59a00aee937acf62e64d1f968693072722ab4e01"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -32,6 +34,7 @@ class ConditionUtils:
         #BEGIN_CONSTRUCTOR
         self.utils = Utils(config)
         self.scratch = config['scratch']
+        logging.basicConfig(level=logging.INFO)
         #END_CONSTRUCTOR
         pass
 
@@ -50,16 +53,17 @@ class ConditionUtils:
            parameter "conditions" of mapping from String to mapping from
            String to list of type "Factor" (Internally this is used to store
            factor information (without the value term) and also a format for
-           returning data in a useful form from get_conditions @optional
-           unit_id unit_ont_id value) -> structure: parameter "factor_label"
-           of String, parameter "factor_ont_ref" of String, parameter
-           "factor_ont_id" of String, parameter "unit_id" of String,
-           parameter "unit_ont_id" of String, parameter "value" of String
+           returning data in a useful form from get_conditions @optional unit
+           unit_ont_id value) -> structure: parameter "factor" of String,
+           parameter "factor_ont_ref" of String, parameter "factor_ont_id" of
+           String, parameter "unit" of String, parameter "unit_ont_id" of
+           String, parameter "value" of String
         """
         # ctx is the context object
         # return variables are: result
         #BEGIN get_conditions
-        self.utils.validate_params(params, ("output_ws_id", "output_obj_name"))
+        logging.info("Starting 'get_conditions' with params:{}".format(params))
+        self.utils.validate_params(params, ("condition_set_ref",), ('conditions',))
         result = self.utils.get_conditions(params)
         #END get_conditions
 
@@ -78,15 +82,15 @@ class ConditionUtils:
            "input_file_path" of String, parameter "output_ws_id" of String,
            parameter "output_obj_name" of String
         :returns: instance of type "FileToConditionSetOutput" -> structure:
-           parameter "output_condition_set_ref" of type "ws_condition_set_id"
-           (@id ws KBaseExperiments.ConditionSet)
+           parameter "condition_set_ref" of type "ws_condition_set_id" (@id
+           ws KBaseExperiments.ConditionSet)
         """
         # ctx is the context object
         # return variables are: result
         #BEGIN file_to_condition_set
-        self.utils.validate_params(params, ("output_ws_name", "output_obj_name"))
-        if 'input_shock_id' not in params and 'input_file_path' not in params:
-            raise ValueError("Must supply either a input_shock_id or input_file_path")
+        logging.info("Starting 'file_to_condition_set' with params:{}".format(params))
+        self.utils.validate_params(params, ("output_ws_id", "output_obj_name"),
+                                   ('input_shock_id', 'input_file_path'))
         result = self.utils.file_to_condition_set(params)
         #END file_to_condition_set
 
@@ -109,6 +113,7 @@ class ConditionUtils:
         # ctx is the context object
         # return variables are: result
         #BEGIN condition_set_to_tsv_file
+        logging.info("Starting 'condition_set_to_tsv_file' with params:{}".format(params))
         self.utils.validate_params(params, ("destination_dir", "input_ref"))
         cs_id, result = self.utils.to_tsv(params)
         #END condition_set_to_tsv_file
@@ -131,6 +136,7 @@ class ConditionUtils:
         # ctx is the context object
         # return variables are: result
         #BEGIN export_condition_set_tsv
+        logging.info("Starting 'export_condition_set_tsv' with params:{}".format(params))
         self.utils.validate_params(params, ("input_ref",))
         params['destination_dir'] = self.scratch
         cs_id, files = self.utils.to_tsv(params)
@@ -155,6 +161,7 @@ class ConditionUtils:
         # ctx is the context object
         # return variables are: result
         #BEGIN export_condition_set_excel
+        logging.info("Starting 'export_condition_set_excel' with params:{}".format(params))
         self.utils.validate_params(params, ("input_ref",))
         params['destination_dir'] = self.scratch
         cs_id, files = self.utils.to_excel(params)

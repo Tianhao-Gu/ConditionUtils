@@ -5,14 +5,14 @@ module KBaseExperiments {
     /*
         Internally this is used to store factor information (without the value term) and also a
         format for returning data in a useful form from get_conditions
-        @optional unit_id unit_ont_id value
+        @optional unit unit_ont_id value
     */
 
     typedef structure{
-        string factor_label;
+        string factor;
         string factor_ont_ref;
         string factor_ont_id;
-        string unit_id;
+        string unit;
         string unit_ont_id;
         string value;
     } Factor;
@@ -25,6 +25,6 @@ module KBaseExperiments {
      typedef structure{
     	mapping<string, list<string>> conditions;
     	list<Factor> factors;
-	string ontology_mapping_method;
+	    string ontology_mapping_method;
      } ConditionSet;
 };

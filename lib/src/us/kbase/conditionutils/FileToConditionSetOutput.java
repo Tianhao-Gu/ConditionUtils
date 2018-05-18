@@ -19,26 +19,26 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
-    "output_condition_set_ref"
+    "condition_set_ref"
 })
 public class FileToConditionSetOutput {
 
-    @JsonProperty("output_condition_set_ref")
-    private String outputConditionSetRef;
+    @JsonProperty("condition_set_ref")
+    private String conditionSetRef;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("output_condition_set_ref")
-    public String getOutputConditionSetRef() {
-        return outputConditionSetRef;
+    @JsonProperty("condition_set_ref")
+    public String getConditionSetRef() {
+        return conditionSetRef;
     }
 
-    @JsonProperty("output_condition_set_ref")
-    public void setOutputConditionSetRef(String outputConditionSetRef) {
-        this.outputConditionSetRef = outputConditionSetRef;
+    @JsonProperty("condition_set_ref")
+    public void setConditionSetRef(String conditionSetRef) {
+        this.conditionSetRef = conditionSetRef;
     }
 
-    public FileToConditionSetOutput withOutputConditionSetRef(String outputConditionSetRef) {
-        this.outputConditionSetRef = outputConditionSetRef;
+    public FileToConditionSetOutput withConditionSetRef(String conditionSetRef) {
+        this.conditionSetRef = conditionSetRef;
         return this;
     }
 
@@ -54,7 +54,7 @@ public class FileToConditionSetOutput {
 
     @Override
     public String toString() {
-        return ((((("FileToConditionSetOutput"+" [outputConditionSetRef=")+ outputConditionSetRef)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((("FileToConditionSetOutput"+" [conditionSetRef=")+ conditionSetRef)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }
