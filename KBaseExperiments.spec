@@ -20,7 +20,10 @@ module KBaseExperiments {
     /*
      factors - list of supplied factors
      conditions - mapping of condition_labels to a list of factor values in the same order as the factors array
-     Ontology_mapping_method - One of “User curation”, “Closest matching string”
+     ontology_mapping_method - One of “User curation”, “Closest matching string”
+     @metadata ws ontology_mapping_method as Mapping Method
+     @metadata ws length(factors) as Number of Factors
+     @metadata ws length(conditions) as Number of Conditions
     */
      typedef structure{
     	mapping<string, list<string>> conditions;
