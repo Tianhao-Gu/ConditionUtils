@@ -113,7 +113,7 @@ class Utils:
         """Searches KBASE ontologies for terms matching the user supplied factors and units.
         Add the references if found"""
         if False:
-            # TODO: implement ontology serch
+            # TODO: implement ontology search
             pass
         else:
             factor['factor_ont_ref'] = self.DEFAULT_ONTOLOGY_REF
@@ -128,7 +128,7 @@ class Utils:
 
         _id, df = self._ws_obj_to_df(params['input_ref'])
         files['file_path'] = os.path.join(params['destination_dir'], _id + ".xlsx")
-        df.to_csv(files['file_path'], sep="\t")
+        df.to_csv(files['file_path'], sep="\t", index=False)
 
         return _id, files
 
@@ -140,7 +140,7 @@ class Utils:
         files['file_path'] = os.path.join(params['destination_dir'], _id + ".xlsx")
 
         writer = pd.ExcelWriter(files['file_path'])
-        df.to_excel(writer, "Conditions")
+        df.to_excel(writer, "Conditions", index=False)
         writer.save()
 
         return _id, files

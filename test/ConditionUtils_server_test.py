@@ -52,8 +52,8 @@ class ConditionUtilsTest(unittest.TestCase):
         cls.callback_url = os.environ['SDK_CALLBACK_URL']
         cls.dfu = DataFileUtil(cls.callback_url)
         suffix = int(time.time() * 1000)
-        wsName = "test_CompoundSetUtils_" + str(suffix)
-        ret = cls.wsClient.create_workspace({'workspace': wsName})
+        cls.wsName = "test_CompoundSetUtils_" + str(suffix)
+        ret = cls.wsClient.create_workspace({'workspace': cls.wsName})
         cls.wsId = ret[0]
         cls.cond_set = json.load(open('data/CS1.json'))
         info = cls.dfu.save_objects({
