@@ -5,8 +5,6 @@ import shutil
 import time
 import unittest
 
-from mock import patch
-
 try:
     from ConfigParser import ConfigParser  # py2
 except ImportError:
@@ -84,13 +82,6 @@ class ConditionUtilsTest(unittest.TestCase):
     def getContext(self):
         return self.__class__.ctx
 
-    @staticmethod
-    def fake_staging_download(params):
-        scratch = '/kb/module/work/tmp/'
-        inpath = params['staging_file_subdir_path']
-        shutil.copy('/kb/module/test/data/' + inpath, scratch + inpath)
-        return {'copy_file_path': scratch + inpath}
-
     def test_missing_params(self):
         with self.assertRaisesRegexp(ValueError, "Required keys"):
             self.getImpl().get_conditions(self.getContext(), {})
@@ -115,10 +106,9 @@ class ConditionUtilsTest(unittest.TestCase):
                                                 'factor_ont_ref', 'unit', 'factor', 'value'})
         self.assertEqual(s1['Custom'][0]['value'], "0")
 
-    @patch.object(DataFileUtil, "download_staging_file", new=fake_staging_download)
     def test_tsv_import(self):
         params = {'output_ws_id': self.getWsId(),
-                  'input_file_path': 'CS1.tsv',
+                  'input_file_path': 'data/CS1.tsv',
                   'output_obj_name': 'CS1'}
         ret = self.getImpl().file_to_condition_set(self.getContext(), params)[0]
         assert ret and ('condition_set_ref' in ret)

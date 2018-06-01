@@ -51,9 +51,7 @@ class Utils:
     def file_to_condition_set(self, params):
         """Convert a user supplied file to a compound set"""
         if 'input_file_path' in params:
-            scratch_file_path = self.dfu.download_staging_file(
-                {'staging_file_subdir_path': params['input_file_path']}
-            ).get('copy_file_path')
+            scratch_file_path = params['input_file_path']
         elif 'input_shock_id' in params:
             scratch_file_path = self.dfu.shock_to_file(
                 {'shock_id': params['input_shock_id'],
