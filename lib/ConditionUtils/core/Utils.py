@@ -9,6 +9,7 @@ import pandas as pd
 from xlrd.biffh import XLRDError
 
 from DataFileUtil.DataFileUtilClient import DataFileUtil
+from KBaseSearchEngine.KBaseSearchEngineClient import KBaseSearchEngine
 
 
 class Utils:
@@ -16,6 +17,7 @@ class Utils:
         self.cfg = config
         self.scratch = config['scratch']
         self.dfu = DataFileUtil(os.environ['SDK_CALLBACK_URL'])
+        self.kbse = KBaseSearchEngine(config['search-url'])
         self.DEFAULT_ONTOLOGY_REF = "KbaseOntologies/Custom"
         self.DEFAULT_ONTOLOGY_ID = "Custom:Term"
         self.DEFAULT_UNIT_ID = "Custom:Unit"
@@ -93,31 +95,76 @@ class Utils:
     def _df_to_cs_obj(self, cs_df):
         """Converts a dataframe from a user file to a compound set object"""
         condition_set = {'ontology_mapping_method': "User Curation"}
+        cs_df.fillna('', inplace=True)
         if not len(cs_df):
             raise ValueError("No factors in supplied files")
         factor_df = cs_df.filter(regex="[Uu]nit|[Ff]actor")
         condition_df = cs_df.drop(factor_df.columns, axis=1)
         if not len(condition_df.columns):
             raise ValueError("Unable to find any condition columns in supplied file")
-        factor_df.rename(columns=lambda x: x.lower().strip(), inplace=True)
+
+        factor_df.rename(columns=lambda x: x.lower().replace(" ontology ", "_ont_").strip(), inplace=True)
         if "factor" not in factor_df.columns:
             raise ValueError("Unable to find a 'Factor' column in supplied file")
-        factors = factor_df.filter(items=('factor', 'unit')).to_dict('records')
+        factor_fields = ('factor', 'unit', 'factor_ont_id', 'unit_ont_id')
+        factors = factor_df.filter(items=factor_fields).to_dict('records')
+
         condition_set['factors'] = [self._add_ontology_info(f) for f in factors]
         condition_set['conditions'] = condition_df.to_dict('list')
         return condition_set
 
+    def _search_ontologies(self, term, closest=False):
+        """
+        Match to an existing KBase ontology term
+        :param term: Test to match
+        :param closest: if false, term must exactly match an ontology ID
+        :return: dict(ontology_ref, id)
+        """
+        params = {
+            "object_types": ["OntologyTerm"],
+            "match_filter": {
+                "lookup_in_keys": {"id": {"value": term}}
+            },
+            "access_filter": {
+                "with_private": 0,
+                "with_public": 1
+            },
+            "pagination": {
+                "count": 1
+            },
+            "post_processing": {
+                "skip_data": 1
+            }
+        }
+        if closest:
+            params['match_filter'] = {"full_text_in_all": term}
+        res = self.kbse.search_objects(params)
+        if not res['objects']:
+            return None
+        term = res['objects'][0]
+        return {"ontology_ref": term['guid'].split(":")[1], "id": term['key_props']['id']}
+
     def _add_ontology_info(self, factor):
         """Searches KBASE ontologies for terms matching the user supplied factors and units.
         Add the references if found"""
-        if False:
-            # TODO: implement ontology search
-            pass
+        optionals = {"unit", "unit_ont_id", "unit_ont_ref", }
+        factor = {k: v for k, v in factor.items() if k not in optionals or v != ""}
+        ont_info = self._search_ontologies(factor.get('factor_ont_id', "").replace("_", ":"))
+        if ont_info:
+            factor['factor_ont_ref'] = ont_info['ontology_ref']
+            factor['factor_ont_id'] = ont_info['id']
         else:
             factor['factor_ont_ref'] = self.DEFAULT_ONTOLOGY_REF
             factor['factor_ont_id'] = self.DEFAULT_ONTOLOGY_ID
-        if 'unit' in factor:
-            factor['factor_unit_id'] = self.DEFAULT_UNIT_ID
+
+        if factor.get('unit'):
+            ont_info = self._search_ontologies(factor.get('unit_ont_id', '').replace("_", ":"))
+            if ont_info:
+                factor['unit_ont_ref'] = ont_info['ontology_ref']
+                factor['unit_ont_id'] = ont_info['id']
+            else:
+                factor['unit_ont_ref'] = self.DEFAULT_ONTOLOGY_REF
+                factor['unit_ont_id'] = self.DEFAULT_UNIT_ID
         return factor
 
     def to_tsv(self, params):
@@ -125,7 +172,7 @@ class Utils:
         files = {}
 
         _id, df = self._ws_obj_to_df(params['input_ref'])
-        files['file_path'] = os.path.join(params['destination_dir'], _id + ".xlsx")
+        files['file_path'] = os.path.join(params['destination_dir'], _id + ".tsv")
         df.to_csv(files['file_path'], sep="\t", index=False)
 
         return _id, files

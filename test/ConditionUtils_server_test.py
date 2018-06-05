@@ -15,6 +15,7 @@ from DataFileUtil.DataFileUtilClient import DataFileUtil
 from ConditionUtils.ConditionUtilsImpl import ConditionUtils
 from ConditionUtils.ConditionUtilsServer import MethodContext
 from ConditionUtils.authclient import KBaseAuth as _KBaseAuth
+from ConditionUtils.core.Utils import Utils
 
 
 class ConditionUtilsTest(unittest.TestCase):
@@ -46,6 +47,7 @@ class ConditionUtilsTest(unittest.TestCase):
         cls.wsURL = cls.cfg['workspace-url']
         cls.wsClient = workspaceService(cls.wsURL)
         cls.serviceImpl = ConditionUtils(cls.cfg)
+        cls.serviceUtils = Utils(cls.cfg)
         cls.scratch = cls.cfg['scratch']
         cls.callback_url = os.environ['SDK_CALLBACK_URL']
         cls.dfu = DataFileUtil(cls.callback_url)
@@ -63,6 +65,7 @@ class ConditionUtilsTest(unittest.TestCase):
             }]
         })[0]
         cls.condition_set_ref = "%s/%s/%s" % (info[6], info[0], info[4])
+        cls.cond_set_2 = json.load(open('data/CS2.json'))
 
     @classmethod
     def tearDownClass(cls):
@@ -82,6 +85,15 @@ class ConditionUtilsTest(unittest.TestCase):
     def getContext(self):
         return self.__class__.ctx
 
+    def test_add_ontology_info(self):
+        factor = {'factor': 'stalk development', "factor_ont_id": "GO:0031150", "unit": "Hour",
+                  "unit_ont_id": "UO_0000032"}
+        with_ref = self.serviceUtils._add_ontology_info(factor)
+        self.assertEqual(with_ref.get('factor_ont_ref'), '6308/3/2')
+        self.assertEqual(with_ref.get('factor_ont_id'), 'GO:0031150')
+        self.assertEqual(with_ref.get('unit_ont_id'), 'UO:0000032')
+        self.assertEqual(with_ref.get('unit_ont_ref'), '6308/15/6')
+
     def test_missing_params(self):
         with self.assertRaisesRegexp(ValueError, "Required keys"):
             self.getImpl().get_conditions(self.getContext(), {})
@@ -97,25 +109,24 @@ class ConditionUtilsTest(unittest.TestCase):
     def test_get_conditions(self):
         params = {'condition_set_ref': self.condition_set_ref, 'conditions': ['S1', 'S4']}
         ret = self.getImpl().get_conditions(self.getContext(), params)[0]
-        print(ret)
         self.assertEqual(set(ret['conditions'].keys()), {"S1", "S4"})
         s1 = ret['conditions']['S1']
         self.assertIn("Custom", s1)
         self.assertEqual(len(s1['Custom']), 2)
-        self.assertEqual(set(s1['Custom'][0]), {'factor_ont_id', 'factor_unit_id',
-                                                'factor_ont_ref', 'unit', 'factor', 'value'})
+        self.assertEqual(set(s1['Custom'][0]), {'factor_ont_id', 'unit_ont_id', 'factor',
+                                                'factor_ont_ref', 'unit_ont_ref', 'unit', 'value'})
         self.assertEqual(s1['Custom'][0]['value'], "0")
 
     def test_tsv_import(self):
-        params = {'output_ws_id': self.getWsId(),
-                  'input_file_path': 'data/CS1.tsv',
-                  'output_obj_name': 'CS1'}
+        params = {'output_ws_id': self.wsId,
+                  'input_file_path': 'data/CS2.tsv',
+                  'output_obj_name': 'Condition_Set'}
         ret = self.getImpl().file_to_condition_set(self.getContext(), params)[0]
         assert ret and ('condition_set_ref' in ret)
         data = self.dfu.get_objects({
             'object_refs': [ret['condition_set_ref']]
         })['data'][0]['data']
-        self.assertEqual(data, self.cond_set)
+        self.assertEqual(data, self.cond_set_2)
 
     def test_excel_import(self):
         shock_file = '/CS1.xlsx'
@@ -123,7 +134,7 @@ class ConditionUtilsTest(unittest.TestCase):
         shock_id = self.dfu.file_to_shock({'file_path': self.scratch + shock_file})['shock_id']
         params = {'output_ws_id': self.getWsId(),
                   'input_shock_id': shock_id,
-                  'output_obj_name': 'CS2'}
+                  'output_obj_name': 'CS1'}
         ret = self.getImpl().file_to_condition_set(self.getContext(), params)[0]
         assert ret and ('condition_set_ref' in ret)
         data = self.dfu.get_objects({
