@@ -5,7 +5,7 @@ module KBaseExperiments {
     /*
         Internally this is used to store factor information (without the value term) and also a
         format for returning data in a useful form from get_conditions
-        @optional unit unit_ont_id value
+        @optional unit unit_ont_id unit_ont_ref value
     */
 
     typedef structure{
@@ -13,6 +13,7 @@ module KBaseExperiments {
         string factor_ont_ref;
         string factor_ont_id;
         string unit;
+        string unit_ont_ref;
         string unit_ont_id;
         string value;
     } Factor;
