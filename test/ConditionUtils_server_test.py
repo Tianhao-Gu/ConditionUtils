@@ -4,11 +4,7 @@ import os
 import shutil
 import time
 import unittest
-
-try:
-    from ConfigParser import ConfigParser  # py2
-except ImportError:
-    from configparser import ConfigParser  # py3
+from configparser import ConfigParser
 
 from biokbase.workspace.client import Workspace as workspaceService
 from DataFileUtil.DataFileUtilClient import DataFileUtil

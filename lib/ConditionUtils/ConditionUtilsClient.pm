@@ -132,6 +132,7 @@ Factor is a reference to a hash where the following keys are defined:
 	factor_ont_ref has a value which is a string
 	factor_ont_id has a value which is a string
 	unit has a value which is a string
+	unit_ont_ref has a value which is a string
 	unit_ont_id has a value which is a string
 	value has a value which is a string
 
@@ -154,6 +155,7 @@ Factor is a reference to a hash where the following keys are defined:
 	factor_ont_ref has a value which is a string
 	factor_ont_id has a value which is a string
 	unit has a value which is a string
+	unit_ont_ref has a value which is a string
 	unit_ont_id has a value which is a string
 	value has a value which is a string
 

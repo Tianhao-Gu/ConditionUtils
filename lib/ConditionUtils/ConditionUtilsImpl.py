@@ -22,8 +22,8 @@ class ConditionUtils:
     # the latter method is running.
     ######################################### noqa
     VERSION = "0.0.1"
-    GIT_URL = "https://github.com/JamesJeffryes/ConditionUtils.git"
-    GIT_COMMIT_HASH = "59a00aee937acf62e64d1f968693072722ab4e01"
+    GIT_URL = "https://github.com/kbaseapps/ConditionUtils.git"
+    GIT_COMMIT_HASH = "73db76b2fb5bc61497ff8bc70e67398e6b292929"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -54,10 +54,11 @@ class ConditionUtils:
            String to list of type "Factor" (Internally this is used to store
            factor information (without the value term) and also a format for
            returning data in a useful form from get_conditions @optional unit
-           unit_ont_id value) -> structure: parameter "factor" of String,
-           parameter "factor_ont_ref" of String, parameter "factor_ont_id" of
-           String, parameter "unit" of String, parameter "unit_ont_id" of
-           String, parameter "value" of String
+           unit_ont_id unit_ont_ref value) -> structure: parameter "factor"
+           of String, parameter "factor_ont_ref" of String, parameter
+           "factor_ont_id" of String, parameter "unit" of String, parameter
+           "unit_ont_ref" of String, parameter "unit_ont_id" of String,
+           parameter "value" of String
         """
         # ctx is the context object
         # return variables are: result
