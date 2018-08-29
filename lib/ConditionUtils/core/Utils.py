@@ -20,7 +20,7 @@ class Utils:
         self.callback_url = os.environ['SDK_CALLBACK_URL']
         self.dfu = DataFileUtil(self.callback_url)
         self.kbse = KBaseSearchEngine(config['search-url'])
-        self.gen_api = GenericsAPI(self.callback_url, service_ver='dev')
+        self.gen_api = GenericsAPI(self.callback_url)
         self.DEFAULT_ONTOLOGY_REF = "KbaseOntologies/Custom"
         self.DEFAULT_ONTOLOGY_ID = "Custom:Term"
         self.DEFAULT_UNIT_ID = "Custom:Unit"
@@ -100,23 +100,27 @@ class Utils:
         data_matrix = self.gen_api.fetch_data({'obj_ref': original_matrix_ref}).get('data_matrix')
 
         data_df = pd.read_json(data_matrix)
-
         clusters = data.get('clusters')
 
-        data_index = data_df.index.tolist()
-        cluster_name = [None] * len(data_index)
+        id_name_list = [cluster.get('id_to_data_position').keys() for cluster in clusters]
+        id_names = [item for sublist in id_name_list for item in sublist]
+
+        if set(data_df.columns.tolist()) == set(id_names):  # cluster is based on condition
+            data_df = data_df.T
+
+        cluster_names = [None] * data_df.index.size
 
         cluster_id = 0
         for cluster in clusters:
-            gene_ids = cluster.get('id_to_data_position').keys()
-            gene_idx = [data_index.index(gene_id) for gene_id in gene_ids]
+            item_ids = cluster.get('id_to_data_position').keys()
+            item_idx = [data_df.index.get_loc(item_id) for item_id in item_ids]
 
-            for idx in gene_idx:
-                cluster_name[idx] = cluster_id
+            for idx in item_idx:
+                cluster_names[idx] = cluster_id
 
             cluster_id += 1
 
-        data_df['cluster'] = cluster_name
+        data_df['cluster'] = cluster_names
 
         return data_df
 

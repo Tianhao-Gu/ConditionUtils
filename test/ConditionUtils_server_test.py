@@ -126,6 +126,40 @@ class ConditionUtilsTest(unittest.TestCase):
         print('Loaded ClusterSet: ' + cluster_set_ref)
         return cluster_set_ref
 
+    def loadConditionClusterSet(self):
+
+        if hasattr(self.__class__, 'condition_cluster_set_ref'):
+            return self.__class__.condition_cluster_set_ref
+
+        expr_matrix_ref = self.loadExpressionMatrix()
+
+        # using DFU, missing ClusterSet uploader
+        object_type = 'KBaseExperiments.ClusterSet'
+        cluster_set_object_name = 'test_clusterset'
+        cluster_set_data = {'clustering_parameters': {'dist_metric': 'cityblock',
+                                                      'k_num': '2'},
+                            'clusters': [{'id_to_data_position': {
+                                            'condition_2': 1,
+                                            'condition_3': 2}},
+                                         {'id_to_data_position': {
+                                            'condition_1': 0,
+                                            'condition_4': 3}}],
+                            'original_data': expr_matrix_ref}
+
+        save_object_params = {
+            'id': self.wsId,
+            'objects': [{'type': object_type,
+                         'data': cluster_set_data,
+                         'name': cluster_set_object_name}]
+        }
+
+        dfu_oi = self.dfu.save_objects(save_object_params)[0]
+        condition_cluster_set_ref = str(dfu_oi[6]) + '/' + str(dfu_oi[0]) + '/' + str(dfu_oi[4])
+
+        self.__class__.condition_cluster_set_ref = condition_cluster_set_ref
+        print('Loaded Condition ClusterSet: ' + condition_cluster_set_ref)
+        return condition_cluster_set_ref
+
     def getWsClient(self):
         return self.__class__.wsClient
 
@@ -236,5 +270,32 @@ class ConditionUtilsTest(unittest.TestCase):
         df = xl.parse("ClusterSet")
         expected_index = ['WRI_RS00010_CDS_1', 'WRI_RS00015_CDS_1', 'WRI_RS00025_CDS_1']
         expected_col = ['condition_1', 'condition_2', 'condition_3', 'condition_4', 'cluster']
+        self.assertCountEqual(df.index.tolist(), expected_index)
+        self.assertCountEqual(df.columns.tolist(), expected_col)
+
+    def test_export_condition_cluster_set_excel(self):
+        self.loadConditionClusterSet()
+
+        params = {'input_ref': self.condition_cluster_set_ref}
+        ret = self.getImpl().export_condition_set_excel(self.getContext(), params)[0]
+        assert ret and ('shock_id' in ret)
+
+        output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
+        os.makedirs(output_directory)
+
+        self.dfu.shock_to_file({'shock_id': ret['shock_id'],
+                                'file_path': output_directory,
+                                'unpack': 'unpack'})
+
+        xl_files = [file for file in os.listdir(output_directory) if file.endswith('.xlsx')]
+        self.assertEqual(len(xl_files), 1)
+
+        xl = pd.ExcelFile(os.path.join(output_directory, xl_files[0]))
+        expected_sheet_names = ['ClusterSet']
+        self.assertCountEqual(xl.sheet_names, expected_sheet_names)
+
+        df = xl.parse("ClusterSet")
+        expected_index = ['condition_1', 'condition_2', 'condition_3', 'condition_4']
+        expected_col = ['WRI_RS00010_CDS_1', 'WRI_RS00015_CDS_1', 'WRI_RS00025_CDS_1', 'cluster']
         self.assertCountEqual(df.index.tolist(), expected_index)
         self.assertCountEqual(df.columns.tolist(), expected_col)
