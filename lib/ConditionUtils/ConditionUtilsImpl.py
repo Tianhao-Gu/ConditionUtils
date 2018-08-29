@@ -131,8 +131,8 @@ class ConditionUtils:
         :param params: instance of type "ExportConditionSetParams" ->
            structure: parameter "input_ref" of type "ws_condition_set_id"
            (@id ws KBaseExperiments.ConditionSet)
-        :returns: instance of type "ExportConditionSetOutput" -> structure:
-           parameter "shock_id" of String
+        :returns: instance of type "ExportOutput" -> structure: parameter
+           "shock_id" of String
         """
         # ctx is the context object
         # return variables are: result
@@ -156,8 +156,8 @@ class ConditionUtils:
         :param params: instance of type "ExportConditionSetParams" ->
            structure: parameter "input_ref" of type "ws_condition_set_id"
            (@id ws KBaseExperiments.ConditionSet)
-        :returns: instance of type "ExportConditionSetOutput" -> structure:
-           parameter "shock_id" of String
+        :returns: instance of type "ExportOutput" -> structure: parameter
+           "shock_id" of String
         """
         # ctx is the context object
         # return variables are: result
@@ -172,6 +172,31 @@ class ConditionUtils:
         # At some point might do deeper type checking...
         if not isinstance(result, dict):
             raise ValueError('Method export_condition_set_excel return value ' +
+                             'result is not type dict as required.')
+        # return the results
+        return [result]
+
+    def export_cluster_set_excel(self, ctx, params):
+        """
+        :param params: instance of type "ExportClusterSetParams" ->
+           structure: parameter "input_ref" of type "ws_cluster_set_id" (@id
+           ws KBaseExperiments.ClusterSet)
+        :returns: instance of type "ExportOutput" -> structure: parameter
+           "shock_id" of String
+        """
+        # ctx is the context object
+        # return variables are: result
+        #BEGIN export_cluster_set_excel
+        logging.info("Starting 'export_cluster_set_excel' with params:{}".format(params))
+        self.utils.validate_params(params, ("input_ref",))
+        params['destination_dir'] = self.scratch
+        cs_id, files = self.utils.to_excel(params)
+        result = self.utils.export(files['file_path'], cs_id, params['input_ref'])
+        #END export_cluster_set_excel
+
+        # At some point might do deeper type checking...
+        if not isinstance(result, dict):
+            raise ValueError('Method export_cluster_set_excel return value ' +
                              'result is not type dict as required.')
         # return the results
         return [result]

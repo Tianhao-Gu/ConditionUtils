@@ -9,6 +9,9 @@ module ConditionUtils {
     /* @id ws KBaseExperiments.ConditionSet */
     typedef string ws_condition_set_id;
 
+    /* @id ws KBaseExperiments.ClusterSet */
+    typedef string ws_cluster_set_id;
+
     /*
         Get condition information in a friendly format
 
@@ -65,13 +68,20 @@ module ConditionUtils {
     } ExportConditionSetParams;
 
     typedef structure {
+        ws_cluster_set_id input_ref;
+    } ExportClusterSetParams;
+
+    typedef structure {
         string shock_id;
-    } ExportConditionSetOutput;
+    } ExportOutput;
 
     funcdef export_condition_set_tsv(ExportConditionSetParams params)
-        returns (ExportConditionSetOutput result) authentication required;
+        returns (ExportOutput result) authentication required;
 
     funcdef export_condition_set_excel(ExportConditionSetParams params)
-        returns (ExportConditionSetOutput result) authentication required;
+        returns (ExportOutput result) authentication required;
+
+    funcdef export_cluster_set_excel(ExportClusterSetParams params)
+        returns (ExportOutput result) authentication required;
 
 };

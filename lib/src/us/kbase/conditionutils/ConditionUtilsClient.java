@@ -217,15 +217,15 @@ public class ConditionUtilsClient {
      * <pre>
      * </pre>
      * @param   params   instance of type {@link us.kbase.conditionutils.ExportConditionSetParams ExportConditionSetParams}
-     * @return   parameter "result" of type {@link us.kbase.conditionutils.ExportConditionSetOutput ExportConditionSetOutput}
+     * @return   parameter "result" of type {@link us.kbase.conditionutils.ExportOutput ExportOutput}
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
-    public ExportConditionSetOutput exportConditionSetTsv(ExportConditionSetParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+    public ExportOutput exportConditionSetTsv(ExportConditionSetParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
         List<Object> args = new ArrayList<Object>();
         args.add(params);
-        TypeReference<List<ExportConditionSetOutput>> retType = new TypeReference<List<ExportConditionSetOutput>>() {};
-        List<ExportConditionSetOutput> res = caller.jsonrpcCall("ConditionUtils.export_condition_set_tsv", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        TypeReference<List<ExportOutput>> retType = new TypeReference<List<ExportOutput>>() {};
+        List<ExportOutput> res = caller.jsonrpcCall("ConditionUtils.export_condition_set_tsv", args, retType, true, true, jsonRpcContext, this.serviceVersion);
         return res.get(0);
     }
 
@@ -234,15 +234,32 @@ public class ConditionUtilsClient {
      * <pre>
      * </pre>
      * @param   params   instance of type {@link us.kbase.conditionutils.ExportConditionSetParams ExportConditionSetParams}
-     * @return   parameter "result" of type {@link us.kbase.conditionutils.ExportConditionSetOutput ExportConditionSetOutput}
+     * @return   parameter "result" of type {@link us.kbase.conditionutils.ExportOutput ExportOutput}
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
-    public ExportConditionSetOutput exportConditionSetExcel(ExportConditionSetParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+    public ExportOutput exportConditionSetExcel(ExportConditionSetParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
         List<Object> args = new ArrayList<Object>();
         args.add(params);
-        TypeReference<List<ExportConditionSetOutput>> retType = new TypeReference<List<ExportConditionSetOutput>>() {};
-        List<ExportConditionSetOutput> res = caller.jsonrpcCall("ConditionUtils.export_condition_set_excel", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        TypeReference<List<ExportOutput>> retType = new TypeReference<List<ExportOutput>>() {};
+        List<ExportOutput> res = caller.jsonrpcCall("ConditionUtils.export_condition_set_excel", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
+     * <p>Original spec-file function name: export_cluster_set_excel</p>
+     * <pre>
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.conditionutils.ExportClusterSetParams ExportClusterSetParams}
+     * @return   parameter "result" of type {@link us.kbase.conditionutils.ExportOutput ExportOutput}
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public ExportOutput exportClusterSetExcel(ExportClusterSetParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<ExportOutput>> retType = new TypeReference<List<ExportOutput>>() {};
+        List<ExportOutput> res = caller.jsonrpcCall("ConditionUtils.export_cluster_set_excel", args, retType, true, true, jsonRpcContext, this.serviceVersion);
         return res.get(0);
     }
 

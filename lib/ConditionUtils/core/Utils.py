@@ -10,14 +10,17 @@ from xlrd.biffh import XLRDError
 
 from DataFileUtil.DataFileUtilClient import DataFileUtil
 from KBaseSearchEngine.KBaseSearchEngineClient import KBaseSearchEngine
+from GenericsAPI.GenericsAPIClient import GenericsAPI
 
 
 class Utils:
     def __init__(self, config):
         self.cfg = config
         self.scratch = config['scratch']
-        self.dfu = DataFileUtil(os.environ['SDK_CALLBACK_URL'])
+        self.callback_url = os.environ['SDK_CALLBACK_URL']
+        self.dfu = DataFileUtil(self.callback_url)
         self.kbse = KBaseSearchEngine(config['search-url'])
+        self.gen_api = GenericsAPI(self.callback_url, service_ver='dev')
         self.DEFAULT_ONTOLOGY_REF = "KbaseOntologies/Custom"
         self.DEFAULT_ONTOLOGY_ID = "Custom:Term"
         self.DEFAULT_UNIT_ID = "Custom:Unit"
@@ -76,21 +79,66 @@ class Utils:
         })[0]
         return {"condition_set_ref": "%s/%s/%s" % (info[6], info[0], info[4])}
 
+    def _conditionset_data_to_df(self, data):
+        """
+        Converts a compound set object data to a dataframe
+        """
+
+        factors = pd.DataFrame(data['factors'])
+        factors.rename(columns=lambda x: x.replace("ont", "ontology").capitalize().replace("_", " "))
+        conditions = pd.DataFrame(data['conditions'])
+        cs_df = factors.join(conditions)
+
+        return cs_df
+
+    def _clusterset_data_to_df(self, data):
+        """
+        Converts a cluster set object data to a dataframe
+        """
+
+        original_matrix_ref = data.get('original_data')
+        data_matrix = self.gen_api.fetch_data({'obj_ref': original_matrix_ref}).get('data_matrix')
+
+        data_df = pd.read_json(data_matrix)
+
+        clusters = data.get('clusters')
+
+        data_index = data_df.index.tolist()
+        cluster_name = [None] * len(data_index)
+
+        cluster_id = 0
+        for cluster in clusters:
+            gene_ids = cluster.get('id_to_data_position').keys()
+            gene_idx = [data_index.index(gene_id) for gene_id in gene_ids]
+
+            for idx in gene_idx:
+                cluster_name[idx] = cluster_id
+
+            cluster_id += 1
+
+        data_df['cluster'] = cluster_name
+
+        return data_df
+
     def _ws_obj_to_df(self, input_ref):
-        """Converts a compound set reference to a dataframe"""
+        """Converts workspace obj to a dataframe"""
         res = self.dfu.get_objects({
             'object_refs': [input_ref]
         })['data'][0]
         name = res['info'][1]
-        if "KBaseExperiments.ConditionSet" not in res['info'][2]:
-            raise ValueError("Supplied reference is not a ConditionSet")
 
-        factors = pd.DataFrame(res['data']['factors'])
-        factors.rename(columns=lambda x: x.replace("ont", "ontology").capitalize().replace("_", " "))
-        conditions = pd.DataFrame(res['data']['conditions'])
-        cs_df = factors.join(conditions)
+        obj_type = res['info'][2]
 
-        return name, cs_df
+        if "KBaseExperiments.ConditionSet" in obj_type:
+            cs_df = self._conditionset_data_to_df(res['data'])
+        elif "KBaseExperiments.ClusterSet" in obj_type:
+            cs_df = self._clusterset_data_to_df(res['data'])
+        else:
+            err_msg = 'Ooops! [{}] is not supported.\n'.format(obj_type)
+            err_msg += 'Please supply KBaseExperiments.ConditionSet or KBaseExperiments.ClusterSet'
+            raise ValueError("err_msg")
+
+        return name, cs_df, obj_type
 
     def _df_to_cs_obj(self, cs_df):
         """Converts a dataframe from a user file to a compound set object"""
@@ -171,7 +219,7 @@ class Utils:
         """Convert an compound set to TSV file"""
         files = {}
 
-        _id, df = self._ws_obj_to_df(params['input_ref'])
+        _id, df, obj_type = self._ws_obj_to_df(params['input_ref'])
         files['file_path'] = os.path.join(params['destination_dir'], _id + ".tsv")
         df.to_csv(files['file_path'], sep="\t", index=False)
 
@@ -181,11 +229,17 @@ class Utils:
         """Convert an compound set to Excel file"""
         files = {}
 
-        _id, df = self._ws_obj_to_df(params['input_ref'])
+        _id, df, obj_type = self._ws_obj_to_df(params['input_ref'])
         files['file_path'] = os.path.join(params['destination_dir'], _id + ".xlsx")
 
         writer = pd.ExcelWriter(files['file_path'])
-        df.to_excel(writer, "Conditions", index=False)
+
+        if "KBaseExperiments.ConditionSet" in obj_type:
+            df.to_excel(writer, "Conditions", index=False)
+        elif "KBaseExperiments.ClusterSet" in obj_type:
+            df.to_excel(writer, "ClusterSet", index=True)
+        # else is checked in `_ws_obj_to_df`
+
         writer.save()
 
         return _id, files
