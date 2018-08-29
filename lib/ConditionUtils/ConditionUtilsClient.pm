@@ -422,11 +422,11 @@ ConditionSetToTsvFileOutput is a reference to a hash where the following keys ar
 
 <pre>
 $params is a ConditionUtils.ExportConditionSetParams
-$result is a ConditionUtils.ExportConditionSetOutput
+$result is a ConditionUtils.ExportOutput
 ExportConditionSetParams is a reference to a hash where the following keys are defined:
 	input_ref has a value which is a ConditionUtils.ws_condition_set_id
 ws_condition_set_id is a string
-ExportConditionSetOutput is a reference to a hash where the following keys are defined:
+ExportOutput is a reference to a hash where the following keys are defined:
 	shock_id has a value which is a string
 
 </pre>
@@ -436,11 +436,11 @@ ExportConditionSetOutput is a reference to a hash where the following keys are d
 =begin text
 
 $params is a ConditionUtils.ExportConditionSetParams
-$result is a ConditionUtils.ExportConditionSetOutput
+$result is a ConditionUtils.ExportOutput
 ExportConditionSetParams is a reference to a hash where the following keys are defined:
 	input_ref has a value which is a ConditionUtils.ws_condition_set_id
 ws_condition_set_id is a string
-ExportConditionSetOutput is a reference to a hash where the following keys are defined:
+ExportOutput is a reference to a hash where the following keys are defined:
 	shock_id has a value which is a string
 
 
@@ -514,11 +514,11 @@ ExportConditionSetOutput is a reference to a hash where the following keys are d
 
 <pre>
 $params is a ConditionUtils.ExportConditionSetParams
-$result is a ConditionUtils.ExportConditionSetOutput
+$result is a ConditionUtils.ExportOutput
 ExportConditionSetParams is a reference to a hash where the following keys are defined:
 	input_ref has a value which is a ConditionUtils.ws_condition_set_id
 ws_condition_set_id is a string
-ExportConditionSetOutput is a reference to a hash where the following keys are defined:
+ExportOutput is a reference to a hash where the following keys are defined:
 	shock_id has a value which is a string
 
 </pre>
@@ -528,11 +528,11 @@ ExportConditionSetOutput is a reference to a hash where the following keys are d
 =begin text
 
 $params is a ConditionUtils.ExportConditionSetParams
-$result is a ConditionUtils.ExportConditionSetOutput
+$result is a ConditionUtils.ExportOutput
 ExportConditionSetParams is a reference to a hash where the following keys are defined:
 	input_ref has a value which is a ConditionUtils.ws_condition_set_id
 ws_condition_set_id is a string
-ExportConditionSetOutput is a reference to a hash where the following keys are defined:
+ExportOutput is a reference to a hash where the following keys are defined:
 	shock_id has a value which is a string
 
 
@@ -592,6 +592,98 @@ ExportConditionSetOutput is a reference to a hash where the following keys are d
     }
 }
  
+
+
+=head2 export_cluster_set_excel
+
+  $result = $obj->export_cluster_set_excel($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a ConditionUtils.ExportClusterSetParams
+$result is a ConditionUtils.ExportOutput
+ExportClusterSetParams is a reference to a hash where the following keys are defined:
+	input_ref has a value which is a ConditionUtils.ws_cluster_set_id
+ws_cluster_set_id is a string
+ExportOutput is a reference to a hash where the following keys are defined:
+	shock_id has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a ConditionUtils.ExportClusterSetParams
+$result is a ConditionUtils.ExportOutput
+ExportClusterSetParams is a reference to a hash where the following keys are defined:
+	input_ref has a value which is a ConditionUtils.ws_cluster_set_id
+ws_cluster_set_id is a string
+ExportOutput is a reference to a hash where the following keys are defined:
+	shock_id has a value which is a string
+
+
+=end text
+
+=item Description
+
+
+
+=back
+
+=cut
+
+ sub export_cluster_set_excel
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function export_cluster_set_excel (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to export_cluster_set_excel:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'export_cluster_set_excel');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "ConditionUtils.export_cluster_set_excel",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'export_cluster_set_excel',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method export_cluster_set_excel",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'export_cluster_set_excel',
+				       );
+    }
+}
+ 
   
 sub status
 {
@@ -635,16 +727,16 @@ sub version {
             Bio::KBase::Exceptions::JSONRPC->throw(
                 error => $result->error_message,
                 code => $result->content->{code},
-                method_name => 'export_condition_set_excel',
+                method_name => 'export_cluster_set_excel',
             );
         } else {
             return wantarray ? @{$result->result} : $result->result->[0];
         }
     } else {
         Bio::KBase::Exceptions::HTTP->throw(
-            error => "Error invoking method export_condition_set_excel",
+            error => "Error invoking method export_cluster_set_excel",
             status_line => $self->{client}->status_line,
-            method_name => 'export_condition_set_excel',
+            method_name => 'export_cluster_set_excel',
         );
     }
 }
@@ -716,6 +808,37 @@ an int
 =item Description
 
 @id ws KBaseExperiments.ConditionSet
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a string
+</pre>
+
+=end html
+
+=begin text
+
+a string
+
+=end text
+
+=back
+
+
+
+=head2 ws_cluster_set_id
+
+=over 4
+
+
+
+=item Description
+
+@id ws KBaseExperiments.ClusterSet
 
 
 =item Definition
@@ -973,7 +1096,37 @@ input_ref has a value which is a ConditionUtils.ws_condition_set_id
 
 
 
-=head2 ExportConditionSetOutput
+=head2 ExportClusterSetParams
+
+=over 4
+
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+input_ref has a value which is a ConditionUtils.ws_cluster_set_id
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+input_ref has a value which is a ConditionUtils.ws_cluster_set_id
+
+
+=end text
+
+=back
+
+
+
+=head2 ExportOutput
 
 =over 4
 
